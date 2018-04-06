@@ -25,12 +25,12 @@ module Datadog
     # Create a dictionary to assign a key to every parameter's name, except for tags (treated differently)
     # Goal: Simple and fast to add some other parameters
     OPTS_KEYS = {
-      :date_happened     => :d,
-      :hostname          => :h,
-      :aggregation_key   => :k,
-      :priority          => :p,
-      :source_type_name  => :s,
-      :alert_type        => :t,
+      :date_happened     => 'd:'.freeze,
+      :hostname          => 'h:'.freeze,
+      :aggregation_key   => 'k:'.freeze,
+      :priority          => 'p:'.freeze,
+      :source_type_name  => 's:'.freeze,
+      :alert_type        => 't:'.freeze,
     }
 
     # Service check options
@@ -352,7 +352,9 @@ module Datadog
       OPTS_KEYS.each do |key, shorthand_key|
         if key != :tags && opts[key]
           value = remove_pipes(opts[key])
-          event_string_data << "|#{shorthand_key}:#{value}"
+          event_string_data << PIPE
+          event_string_data << shorthand_key
+          event_string_data << value
         end
       end
 
