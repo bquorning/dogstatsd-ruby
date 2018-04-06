@@ -286,10 +286,14 @@ module Datadog
         elsif key == :message
           message = remove_pipes(opts[:message])
           escaped_message = escape_service_check_message(message)
-          sc_string << "|m:#{escaped_message}"
+          sc_string << PIPE
+          sc_string << shorthand_key
+          sc_string << escaped_message
         else
           value = remove_pipes(opts[key])
-          sc_string << "|#{shorthand_key}#{value}"
+          sc_string << PIPE
+          sc_string << shorthand_key
+          sc_string << value
         end
       end
       return sc_string
