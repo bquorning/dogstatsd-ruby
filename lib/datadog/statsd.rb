@@ -281,7 +281,9 @@ module Datadog
 
         if key == :tags
           if tags_string = tags_as_string(opts)
-            sc_string << "|##{tags_string}"
+            sc_string << PIPE
+            sc_string << HASH
+            sc_string << tags_string
           end
         elsif key == :message
           message = remove_pipes(opts[:message])
@@ -356,7 +358,9 @@ module Datadog
 
       # Tags are joined and added as last part to the string to be sent
       if tags_string = tags_as_string(opts)
-        event_string_data << "|##{tags_string}"
+        event_string_data << PIPE
+        event_string_data << HASH
+        event_string_data << tags_string
       end
 
       raise "Event #{title} payload is too big (more that 8KB), event discarded" if event_string_data.length > 8192 # 8 * 1024 = 8192
@@ -375,11 +379,12 @@ module Datadog
     COMMA = ",".freeze
     PIPE = "|".freeze
     DOT = ".".freeze
+    HASH = "#".freeze
     DOUBLE_COLON = "::".freeze
     UNDERSCORE = "_".freeze
     PROCESS_TIME_SUPPORTED = (RUBY_VERSION >= "2.1.0")
 
-    private_constant :NEW_LINE, :ESC_NEW_LINE, :COMMA, :PIPE, :DOT,
+    private_constant :NEW_LINE, :ESC_NEW_LINE, :COMMA, :PIPE, :DOT, :HASH,
       :DOUBLE_COLON, :UNDERSCORE
 
     def tags_as_string(opts)
@@ -432,7 +437,7 @@ module Datadog
 
         if tags_string = tags_as_string(opts)
           full_stat << PIPE
-          full_stat << '#'.freeze
+          full_stat << HASH
           full_stat << tags_string
         end
 
